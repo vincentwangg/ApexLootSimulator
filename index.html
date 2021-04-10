@@ -40,8 +40,19 @@
     ::-webkit-scrollbar-corner {
         background-color: transparent;
     }
+
+    .noselect {
+        -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+        -khtml-user-select: none; /* Konqueror HTML */
+        -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+        user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+    }
 </style>
-<div style="margin-left: 76px; margin-top: 80px;">
+
+<div id="lootScreen" style="margin-left: 76px; margin-top: 80px; display: none">
     <div id="lootPanel" style="width: 600px; height: 878px; background-color: #373737">
         <div id="namePanel" style="margin-top: 0; margin-left: 0">
             <div style="background-color: #b8860b; width: 600px; height: 66px">
@@ -49,9 +60,9 @@
             </div>
         </div>
         <div id="subLootPanel" class="customScroll" style="width: 600px; height: 786px; padding-top: 25px; padding-left: 19px">
-            <img src="lootpanel1.png" style="float: left; margin-bottom: 6px"/>
-            <img src="evo.png" style="float: left; margin-bottom: 35px"/>
-            <img src="consumables.png" style="float: left; margin-bottom: 12px"/>
+            <img class="noselect" src="lootpanel1.png" style="float: left; margin-bottom: 6px" draggable="false" />
+            <img class="noselect" id="evoShield" src="evo.png" style="float: left" draggable="false" />
+            <img class="noselect" src="consumables.png" style="float: left; margin-top: 25px; margin-bottom: 12px" draggable="false" />
             <div class="delete" style="width: 450px; height: 100px; float: left; display: inline-block"><div style="background-color: red; width: 450px; height: 50px"></div></div>
             <div class="delete" style="width: 450px; height: 100px; float: left; display: inline-block"><div style="background-color: red; width: 450px; height: 50px"></div></div>
             <div class="delete" style="width: 450px; height: 100px; float: left; display: inline-block"><div style="background-color: red; width: 450px; height: 50px"></div></div>
@@ -59,4 +70,58 @@
         <img src="close.png"/>
     </div>
 </div>
+<script
+        src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+        crossorigin="anonymous"></script>
+<script>
+    let keyPressed = false;
+    let timeoutId = null;
+
+    document.addEventListener("keydown", event => {
+        if (!keyPressed) {
+            if (event.isComposing || event.key === 'e') {
+                keyPressed = true;
+                timeoutId = setTimeout(function () {
+                    if (keyPressed && timeoutId !== null) {
+                        document.getElementById("lootScreen").style.display = "block";
+                    }
+                }, 300);
+                return;
+            }
+        }
+    });
+
+    document.addEventListener("keyup", event => {
+        if (keyPressed) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+    });
+
+    // let circle = document.querySelector('circle');
+    // let radius = circle.r.baseVal.value;
+    // let circumference = radius * 2 * Math.PI;
+    //
+    // circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    // circle.style.strokeDashoffset = `${circumference}`;
+    //
+    // function setProgress(percent) {
+    //     const offset = circumference - percent / 100 * circumference;
+    //     circle.style.strokeDashoffset = offset;
+    // }
+    //
+    // const input = document.querySelector('input');
+    // setProgress(input.value);
+    //
+    // input.addEventListener('change', function(e) {
+    //     if (input.value < 101 && input.value > -1) {
+    //         setProgress(input.value);
+    //     }
+    // })
+
+    document.getElementById("evoShield").addEventListener('click', function (event) {
+        document.getElementById("evoShield").style.display = "none";
+    });
+</script>
 </body>
