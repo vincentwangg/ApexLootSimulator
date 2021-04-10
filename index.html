@@ -50,8 +50,33 @@
         user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
     }
-</style>
 
+    .middle-of-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        width: 120px;
+        height: 120px;
+    }
+</style>
+<div style="background-color: black; width: 5px; height: 5px; top: 0; right: 0; left: 0; bottom: 0; position: absolute; margin: auto"></div>
+<div>
+    <svg class="middle-of-screen progress-ring" width="120" height="120"
+         style="transform: rotate(-90deg)">
+        <circle
+                class="progress-ring__circle"
+                id="thecircle"
+                stroke="black"
+                stroke-width="4"
+                fill="transparent"
+                r="52"
+                cx="60"
+                cy="60"/>
+    </svg>
+</div>
 <div id="lootScreen" style="margin-left: 76px; margin-top: 80px; display: none">
     <div id="lootPanel" style="width: 600px; height: 878px; background-color: #373737">
         <div id="namePanel" style="margin-top: 0; margin-left: 0">
@@ -70,15 +95,15 @@
         <img src="close.png"/>
     </div>
 </div>
-<script
-        src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
-        integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
-        crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     let keyPressed = false;
     let timeoutId = null;
+    let animation = null;
+    let circle = document.getElementById('thecircle');
 
     document.addEventListener("keydown", event => {
+        console.log(event.key)
         if (!keyPressed) {
             if (event.isComposing || event.key === 'e') {
                 keyPressed = true;
@@ -87,8 +112,14 @@
                         document.getElementById("lootScreen").style.display = "block";
                     }
                 }, 300);
+                animation = startAnimation();
                 return;
             }
+        }
+
+        if (event.key === 'Tab') {
+            document.getElementById("lootScreen").style.display = "none";
+            document.getElementById("evoShield").style.display = "block";
         }
     });
 
@@ -96,29 +127,34 @@
         if (keyPressed) {
             clearTimeout(timeoutId);
             timeoutId = null;
+            animation.stop();
+
+            setProgress(0);
+            keyPressed = false;
         }
     });
 
-    // let circle = document.querySelector('circle');
-    // let radius = circle.r.baseVal.value;
-    // let circumference = radius * 2 * Math.PI;
-    //
-    // circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    // circle.style.strokeDashoffset = `${circumference}`;
-    //
-    // function setProgress(percent) {
-    //     const offset = circumference - percent / 100 * circumference;
-    //     circle.style.strokeDashoffset = offset;
-    // }
-    //
-    // const input = document.querySelector('input');
-    // setProgress(input.value);
-    //
-    // input.addEventListener('change', function(e) {
-    //     if (input.value < 101 && input.value > -1) {
-    //         setProgress(input.value);
-    //     }
-    // })
+    let radius = circle.r.baseVal.value;
+    let circumference = radius * 2 * Math.PI;
+
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+    circle.style.strokeDashoffset = `${circumference}`;
+
+    function setProgress(percent) {
+        const offset = circumference - percent / 100 * circumference;
+        circle.style.strokeDashoffset = offset;
+    }
+
+    function startAnimation() {
+        return $({property: 0}).animate({property: 100}, {
+            duration: 300,
+            easing: 'linear',
+            step: function() {
+                setProgress(this.property);
+                console.log( 'Current percentage is ' + this.property);// You can write this to your bar
+            }
+        });
+    }
 
     document.getElementById("evoShield").addEventListener('click', function (event) {
         document.getElementById("evoShield").style.display = "none";
