@@ -78,7 +78,7 @@
     </svg>
 </div>
 <div id="evoResult" style="background-color: green; width: 600px; height: 100px; top: 0; right: 0; left: 0; bottom: 500px; position: absolute; margin: auto; display: none"></div>
-<div id="lootScreen" style="margin-left: 76px; margin-top: 80px; display: none">
+<div id="lootScreen" class="noselect" style="margin-left: 76px; margin-top: 80px; display: none">
     <div id="lootPanel" style="width: 600px; height: 878px; background-color: #373737">
         <div id="namePanel" style="margin-top: 0; margin-left: 0">
             <div style="background-color: #b8860b; width: 600px; height: 66px">
@@ -86,9 +86,9 @@
             </div>
         </div>
         <div id="subLootPanel" class="customScroll" style="width: 600px; height: 786px; padding-top: 25px; padding-left: 19px">
-            <img class="noselect" src="lootpanel1.png" style="float: left; margin-bottom: 6px" draggable="false" />
+            <img class="noselect" src="lootpanel1.png" style="float: left; margin-bottom: 6px; pointer-events: none" draggable="false" />
             <img class="noselect" id="evoShield" src="evo.png" style="float: left" draggable="false" />
-            <img class="noselect" src="consumables.png" style="float: left; margin-top: 25px; margin-bottom: 12px" draggable="false" />
+            <img class="noselect" src="consumables.png" style="float: left; margin-top: 25px; margin-bottom: 12px; pointer-events: none" draggable="false" />
             <div class="delete" style="width: 450px; height: 100px; float: left; display: inline-block"><div style="background-color: red; width: 450px; height: 50px"></div></div>
             <div class="delete" style="width: 450px; height: 100px; float: left; display: inline-block"><div style="background-color: red; width: 450px; height: 50px"></div></div>
             <div class="delete" style="width: 450px; height: 100px; float: left; display: inline-block"><div style="background-color: red; width: 450px; height: 50px"></div></div>
@@ -121,6 +121,7 @@
         if (event.key === 'Tab') {
             document.getElementById("lootScreen").style.display = "none";
             document.getElementById("evoShield").style.display = "block";
+            document.getElementById("evoShield").attributes['draggable'] = false;
         }
     });
 
